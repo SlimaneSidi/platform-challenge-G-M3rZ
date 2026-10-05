@@ -3,6 +3,12 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// In-memory task store (no database in this challenge).
+const tasks = [
+  { id: 1, title: "Set up the CI pipeline", completed: true },
+  { id: 2, title: "Write the README", completed: false }
+];
+
 function calculateTotal(items) {
   return items.reduce((total, item) => total + item.price * item.quantity, 0);
 }
@@ -27,10 +33,14 @@ app.get("/total", (_req, res) => {
   res.json({ total: calculateTotal(items) });
 });
 
+app.get("/tasks", (_req, res) => {
+  res.status(200).json(tasks);
+});
+
 if (require.main === module) {
   app.listen(port, () => {
     console.log(`Application listening on port ${port}`);
   });
 }
 
-module.exports = { app, calculateTotal };
+module.exports = { app, calculateTotal, tasks };
