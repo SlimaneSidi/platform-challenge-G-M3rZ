@@ -37,6 +37,21 @@ app.get("/tasks", (_req, res) => {
   res.status(200).json(tasks);
 });
 
+let nextId = Math.max(0, ...tasks.map((t) => t.id)) + 1;
+
+app.post("/tasks", (req, res) => {
+  const title = req.body && req.body.title;
+
+  if (typeof title !== "string" || title.trim() === "") {
+    return res.status(400).json({ error: "title is required" });
+  }
+
+  const task = { id: nextId++, title: title.trim(), completed: false };
+  tasks.push(task);
+
+  res.status(201).json(task);
+});
+
 if (require.main === module) {
   app.listen(port, () => {
     console.log(`Application listening on port ${port}`);
